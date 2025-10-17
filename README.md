@@ -1,5 +1,5 @@
  ReloadZone
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -207,7 +207,12 @@
           // Muestra la sección de estadísticas
           document.getElementById('playerStats').innerHTML = statsHtml;
           document.getElementById('statsSection').style.display = 'block';
-          window.scrollTo(0, document.body.scrollHeight);
+
+          // Desplázate hacia la sección de estadísticas
+          window.scrollTo({
+            top: document.getElementById('statsSection').offsetTop,
+            behavior: 'smooth'
+          });
         } else {
           document.getElementById('playerStats').innerHTML = '<p>No se encontraron estadísticas para este jugador.</p>';
         }
@@ -222,8 +227,4 @@
     function rechargeUC() {
       const ucAmount = document.getElementById('ucAmount').value;
       if (!ucAmount || ucAmount <= 0) {
-        alert("Por favor, ingresa una cantidad válida de UC.");
-        return;
-      }
-
-      // Simula la recarga y muestra un mensaje
+        alert("Por favor, ingresa una
