@@ -1,4 +1,4 @@
-# ReloadZone
+ ReloadZone
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -133,7 +133,7 @@
   </footer>
 
   <script>
-    const apiKey = 'TU_API_KEY_AQUI';  // Sustituye con tu API Key real de PUBG
+    const apiKey = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJlNjRlNGJlMC04ZDk5LTAxM2UtM2Y2ZS01MjQxZDA2Y2U0NDgiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNzYwNzE0MDY4LCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6InB1YmctcG93ZXJodWIifQ.5bCTMcKacNmQbyuaPX-8GyXQHx2y-uyfUt40JuRgEVQ';  // Tu clave API de PUBG
 
     // Función para obtener estadísticas del jugador
     function getPlayerStats() {
@@ -143,6 +143,7 @@
         return;
       }
 
+      // Realiza la solicitud a la API de PUBG
       fetch(`https://api.pubg.com/shards/mobile/players/${playerId}/seasons`, {
         method: 'GET',
         headers: {
@@ -151,15 +152,20 @@
         }
       })
       .then(response => {
+        // Verifica si la respuesta es exitosa
         if (!response.ok) {
           throw new Error('No se encontraron estadísticas para este jugador.');
         }
         return response.json();
       })
       .then(data => {
-        console.log(data);  // Imprime los datos para depuración
+        console.log('Datos de la API:', data);  // Ver la respuesta completa en la consola
+
+        // Verifica si los datos están correctamente estructurados
         if (data && data.data && data.data[0]) {
           const stats = data.data[0].attributes.stats;
+
+          // Genera el HTML para mostrar las estadísticas
           const statsHtml = `
             <div class="stat-card">
               <h3>Kills</h3>
@@ -173,13 +179,18 @@
               <h3>Partidas Jugadas</h3>
               <p>${stats.matches}</p>
             </div>
+            <div class="stat-card">
+              <h3>Daño Infligido</h3>
+              <p>${stats.damageDealt}</p>
+            </div>
           `;
           document.getElementById('playerStats').innerHTML = statsHtml;
         } else {
-          document.getElementById('playerStats').innerHTML = '<p>No se encontraron estadísticas.</p>';
+          document.getElementById('playerStats').innerHTML = '<p>No se encontraron estadísticas para este jugador.</p>';
         }
       })
       .catch(error => {
+        console.error('Error al obtener las estadísticas:', error);
         document.getElementById('playerStats').innerHTML = `<p>Error: ${error.message}</p>`;
       });
     }
@@ -193,11 +204,9 @@
       }
 
       // Aquí simula el proceso de recarga y muestra un mensaje
-      // Si tienes un backend que maneje las recargas, este es el lugar para integrarlo.
       document.getElementById('rechargeStatus').innerHTML = `<p>Recarga exitosa. Has recibido ${ucAmount} UC.</p>`;
       
-      // Simulando el pago con PayPal (puedes agregar lógica de pago real más tarde)
-      console.log(`Recarga de ${ucAmount} UC completada.`); // Solo para depuración
+      console.log(`Recarga de ${ucAmount} UC completada.`);
     }
   </script>
 
