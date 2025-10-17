@@ -223,8 +223,8 @@
       });
     }
 
-    // Función para simular la recarga de UC
-    function rechargeUC() {
-      const ucAmount = document.getElementById('ucAmount').value;
-      if (!ucAmount || ucAmount <= 0) {
-        alert("Por favor, ingresa una
+    // Función para ir a la parte superior
+    function goBack() {
+      window.scrollTo({
+        top: 0,
+       
