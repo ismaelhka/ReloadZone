@@ -1,133 +1,107 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma de Estadísticas PUBG y Recarga UC</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #1e2a3b;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      height: 100vh;
-      margin: 0;
-    }
-    .container {
-      text-align: center;
-      margin-top: 20px;
-    }
-    input, button, select {
-      padding: 10px;
-      font-size: 1rem;
-      margin-top: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      background-color: #333;
-      color: white;
-    }
-    button:hover {
-      background-color: #555;
-    }
-    #playerStats {
-      margin-top: 20px;
-      display: none;
-    }
-    #ucMessage {
-      margin-top: 20px;
-      font-size: 1.2rem;
-      color: #f1c40f;
-    }
-    #ucContainer {
-      margin-top: 30px;
-      text-align: center;
-    }
-    #ucMessage {
-      margin-top: 20px;
-      font-size: 1.2rem;
-      color: #f1c40f;
-    }
-  </style>
-</head>
-<body>
+// Define una variable para almacenar la selección
+    let selectedUC = {
+        uc: null,
+        precio: null
+    };
 
-  <h1>Consulta de Estadísticas PUBG y Recarga UC</h1>
+    // LÓGICA PARA SELECCIONAR LA TARJETA DE UC
+    document.querySelectorAll('.uc-card').forEach(card => {
+        card.addEventListener('click', function() {
+            // Quitar la clase 'seleccionado' de todas las tarjetas
+            document.querySelectorAll('.uc-card').forEach(c => c.classList.remove('seleccionado'));
+            
+            // Añadir la clase 'seleccionado' a la tarjeta clickeada
+            this.classList.add('seleccionado');
 
-  <div class="container">
-    <input type="text" id="playerId" placeholder="Ingresa el ID del Jugador">
-    <button onclick="getPlayerStats()">Ver Estadísticas</button>
-  </div>
+            // Actualizar la variable de selección
+            selectedUC.uc = this.getAttribute('data-uc');
+            selectedUC.precio = this.querySelector('.precio').textContent;
 
-  <div id="playerStats">
-    <h2>Estadísticas del Jugador</h2>
-    <div id="statsContainer"></div>
-  </div>
+            console.log(`Seleccionaste ${selectedUC.uc} UC por ${selectedUC.precio}`);
+        });
+    });
 
-  <div id="ucContainer">
-    <h2>Recargar UC</h2>
-    <select id="ucOptions">
-      <option value="60">60 UC</option>
-      <option value="150">150 UC</option>
-      <option value="300">300 UC</option>
-      <option value="600">600 UC</option>
-    </select>
-    <button onclick="addUC()">Recargar UC</button>
-    <p id="ucMessage"></p>
-  </div>
+    // FUNCIÓN SIMULADA PARA BUSCAR JUGADOR (Mantenemos el token de ejemplo)
+    const PUBG_API_TOKEN = "eyJ0eXAi0iJKV1QiLCJhbGciOiJlUzI1NiJ9.eyJqdGkiOiJl NJRINGJIMC04ZDk5LTAxM2UtM2Y2ZS01MjQxZDA2Y2U 0NDgiLCJpc3MiOiJnYW1lbG9ja2VyliwiaWF0ljoxNzYwN zE0MDY4LCJwdWliOiJibHVlaG9sZSIsInRpdGxlIjoi cHVicylslmFwcCI6InB1YmctcG93ZXJodWlifQ.5bCTMcKacNm QbyuaPX-8GyXQx2y-uyfUt40JuR";
+    
+    function mostrarDatosJugador() {
+        const playerId = document.getElementById('player-id').value.trim();
+        const resultadoDiv = document.getElementById('resultado-jugador');
+        const playerName = document.getElementById('player-name');
+        const playerLevel = document.getElementById('player-level');
 
-  <script>
-    // API Key actualizada
-    const apiKey = 'eyJ0eXAi0iJKV1QiLCJhbGciOiJlUzI1NiJ9.eyJqdGkiOiJlNJRINGJIMC04ZDk5LTAxM2UtM2Y2ZS01MjQxZDA2Y2U0NDgiLCJpc3MiOiJnYW1lbG9ja2VyliwiaWF0ljoxNzYwNzE0MDY4LCJwdWliOiJibHVlaG9sZSIsInRpdGxlljoicHViZylslmFwcCI6InB1YmctcG93ZXJodWlifQ.5bCTMcKacNmQbyuaPX-8GyXQx2y-uyfUt40JuRgEVQ';
-
-    // Función para obtener las estadísticas del jugador
-    function getPlayerStats() {
-      const playerId = document.getElementById('playerId').value;
-      if (!playerId) {
-        alert('Por favor, ingresa un ID de jugador válido.');
-        return;
-      }
-
-      fetch(`https://api.pubg.com/shards/mobile/players/${playerId}/seasons`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,  // Usando la nueva API Key
-          'Accept': 'application/vnd.api+json'
+        if (playerId.length < 5) {
+            alert("Por favor, ingresa un ID de jugador válido.");
+            resultadoDiv.style.display = 'none';
+            return;
         }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.data && data.data.length > 0) {
-          const stats = data.data[0].attributes.stats;
-          // Mostrar estadísticas del jugador
-          document.getElementById('statsContainer').innerHTML = `
-            <p>Kills: ${stats.kills}</p>
-            <p>Victorias: ${stats.wins}</p>
-            <p>Partidas Jugadas: ${stats.matches}</p>
-            <p>Daño Infligido: ${stats.damageDealt}</p>
-          `;
-          // Mostrar la sección de estadísticas
-          document.getElementById('playerStats').style.display = 'block';
-          // Desplazarse a la sección de estadísticas
-          window.location.hash = "playerStats";
-        } else {
-          alert('No se encontraron estadísticas para este jugador.');
+
+        // SIMULACIÓN DEL RESULTADO
+        const nombreSimulado = "ProGamer" + playerId.substring(playerId.length - 4);
+        const nivelSimulado = Math.floor(Math.random() * 80) + 10; 
+        
+        playerName.textContent = nombreSimulado;
+        playerLevel.textContent = nivelSimulado;
+        resultadoDiv.style.display = 'block';
+
+        document.getElementById('recarga-opciones').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // --- NUEVA FUNCIÓN PARA PROCESAR EL PAGO (MÉTODO POST SIMULADO) ---
+    function procesarPago() {
+        const playerId = document.getElementById('player-id').value.trim();
+        const playerName = document.getElementById('player-name').textContent;
+
+        if (!playerId || document.getElementById('resultado-jugador').style.display === 'none') {
+            alert("⚠️ Primero debes verificar tu ID de jugador.");
+            document.getElementById('jugador-info').scrollIntoView({ behavior: 'smooth' });
+            return;
         }
-      })
-      .catch(error => {
-        console.error('Error al obtener estadísticas:', error);
-        alert('Hubo un error al obtener las estadísticas.');
-      });
-    }
 
-    // Función para simular la recarga de UC
-    function addUC() {
-      const ucAmount = document.getElementById('ucOptions').value; // Obtener la cantidad de UC seleccionada
-      document.getElementById('ucMessage').innerText = `¡Has recibido ${ucAmount} UC!`;
-    }
-  </script>
+        if (!selectedUC.uc) {
+            alert("⚠️ Debes seleccionar un paquete de UC para continuar.");
+            document.getElementById('recarga-opciones').scrollIntoView({ behavior: 'smooth' });
+            return;
+        }
 
-</body>
-</html>
+        // 1. PREPARAR EL CUERPO (BODY) DE LA PETICIÓN POST
+        const bodyData = {
+            player_id: playerId,
+            player_name: playerName,
+            uc_amount: selectedUC.uc,
+            price: selectedUC.precio,
+            currency: 'USD',
+            payment_method: 'PENDING'
+        };
+
+        // 2. SIMULAR LA LLAMADA POST
+        console.log("--- SIMULANDO PETICIÓN POST DE PAGO ---");
+        console.log("URL de Pago Simulada: https://paymentgateway.com/process");
+        console.log("Cuerpo (Body) Enviado:");
+        console.log(JSON.stringify(bodyData, null, 2));
+
+        // Aquí iría el código real de 'fetch' con el método POST
+        /*
+        fetch('https://paymentgateway.com/process', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Authorization': `Bearer ${PUBG_API_TOKEN}` // O un token de pago
+            },
+            body: JSON.stringify(bodyData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Si el backend responde, lo redirigimos a la página de éxito/pago
+            window.location.href = `pagina_de_pago.html?order_id=${data.orderId}`;
+        })
+        .catch(error => console.error('Error en el pago:', error));
+        */
+
+
+        // 3. SIMULAR LA REDIRECCIÓN A LA SECCIÓN DE PAGO FINAL
+        alert(`✅ Datos listos. Redirigiendo a la pasarela de pago para ${selectedUC.uc} UC a ${playerName}.`);
+        
+        // Redirigir la página a una URL de ejemplo (Usando GET para la redirección, como es lo estándar)
+        window.location.href = `pago_final.html?player=${playerId}&uc=${selectedUC.uc}&amount=${selectedUC.precio}`;
+    }
