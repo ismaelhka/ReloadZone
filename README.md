@@ -1,4 +1,4 @@
- ReloadZone
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,7 +7,6 @@
   <title>Plataforma de Recarga UC</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    /* Estilos generales */
     body {
       font-family: 'Roboto', sans-serif;
       background-color: #0a192f;
@@ -34,7 +33,7 @@
 
     .container {
       width: 80%;
-      max-width: 1100px;
+      max-width: 1200px;
       background-color: #1d2a40;
       border-radius: 12px;
       padding: 30px;
@@ -48,6 +47,7 @@
     .section h2 {
       font-size: 1.8em;
       margin-bottom: 20px;
+      color: #ecf0f1;
     }
 
     .input-field, .button {
@@ -58,8 +58,9 @@
       margin-bottom: 20px;
       border: none;
       color: #fff;
-      font-size: 1em;
+      font-size: 1.2em;
       outline: none;
+      box-sizing: border-box;
     }
 
     .button {
@@ -72,10 +73,11 @@
     }
 
     .card {
-      background-color: #2c3e50;
+      background-color: #34495e;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+      margin-bottom: 20px;
     }
 
     footer {
@@ -84,16 +86,11 @@
       font-size: 0.9em;
     }
 
-    .message {
-      margin-top: 20px;
-      color: #2ecc71;
-      font-size: 1.2em;
-    }
-
-    /* Nueva sección para mostrar las estadísticas */
+    /* Estilo para las estadísticas */
     #statsSection {
       display: none;
       margin-top: 40px;
+      transition: all 0.5s ease;
     }
 
     .stat-card {
@@ -105,12 +102,24 @@
     }
 
     .stat-card h3 {
-      font-size: 1.2em;
+      font-size: 1.4em;
       margin-bottom: 10px;
+      color: #1abc9c;
     }
 
     .stat-card p {
-      font-size: 1.4em;
+      font-size: 1.6em;
+    }
+
+    .section-title {
+      font-size: 1.8em;
+      color: #ecf0f1;
+    }
+
+    /* Botón Volver */
+    #backBtn {
+      background-color: #e74c3c;
+      margin-top: 30px;
     }
 
   </style>
@@ -125,26 +134,16 @@
   <div class="container">
     <!-- Sección de consulta de estadísticas -->
     <div class="section">
-      <h2>Consulta las estadísticas de un jugador</h2>
+      <h2 class="section-title">Consulta las estadísticas de un jugador</h2>
       <input type="text" id="playerId" class="input-field" placeholder="Ingresa el ID del jugador">
       <button class="button" onclick="getPlayerStats()">Consultar Estadísticas</button>
     </div>
 
-    <!-- Sección de recarga de UC -->
-    <div class="section">
-      <h2>Recarga UC</h2>
-      <div class="card">
-        <input type="number" id="ucAmount" class="input-field" placeholder="Cantidad de UC" min="1">
-        <button class="button" onclick="rechargeUC()">Recargar UC</button>
-        <div id="rechargeStatus"></div>
-      </div>
-    </div>
-
     <!-- Sección donde se mostrarán las estadísticas del jugador -->
     <div id="statsSection">
-      <h2>Estadísticas del Jugador</h2>
+      <h2 class="section-title">Estadísticas del Jugador</h2>
       <div id="playerStats"></div>
-      <button class="button" onclick="goBack()">Volver</button>
+      <button class="button" id="backBtn" onclick="goBack()">Volver</button>
     </div>
   </div>
 
@@ -227,4 +226,11 @@
     function goBack() {
       window.scrollTo({
         top: 0,
-       
+        behavior: 'smooth'
+      });
+      document.getElementById('statsSection').style.display = 'none';  // Ocultar la sección de estadísticas
+    }
+  </script>
+
+</body>
+</html>
