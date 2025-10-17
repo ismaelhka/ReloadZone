@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -178,9 +177,6 @@
         return response.json();
       })
       .then(data => {
-        console.log('Datos de la API:', data);  // Ver la respuesta completa en la consola
-
-        // Verifica si los datos están correctamente estructurados
         if (data && data.data && data.data[0]) {
           const stats = data.data[0].attributes.stats;
 
@@ -215,20 +211,16 @@
         } else {
           document.getElementById('playerStats').innerHTML = '<p>No se encontraron estadísticas para este jugador.</p>';
         }
-      })
-      .catch(error => {
-        console.error('Error al obtener las estadísticas:', error);
-        document.getElementById('playerStats').innerHTML = `<p>Error: ${error.message}</p>`;
       });
     }
 
-    // Función para ir a la parte superior
+    // Función para volver a la página principal
     function goBack() {
+      document.getElementById('statsSection').style.display = 'none';
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
       });
-      document.getElementById('statsSection').style.display = 'none';  // Ocultar la sección de estadísticas
     }
   </script>
 
