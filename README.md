@@ -94,16 +94,6 @@
       text-align: center;
     }
 
-    .stat-card h3 {
-      margin-bottom: 10px;
-    }
-
-    .paypal-button-container {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
     footer {
       margin-top: 30px;
       text-align: center;
@@ -135,18 +125,12 @@
         <button class="button" onclick="rechargeUC()">Recargar UC</button>
         <div id="rechargeStatus"></div>
       </div>
-      <div class="paypal-button-container" id="paypal-button-container">
-        <!-- El botón de PayPal será cargado aquí -->
-      </div>
     </div>
   </div>
 
   <footer>
     <p>&copy; 2025 Plataforma de Recarga UC. Todos los derechos reservados.</p>
   </footer>
-
-  <!-- Script de PayPal -->
-  <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&components=buttons"></script>
 
   <script>
     const apiKey = 'TU_API_KEY_AQUI';  // Sustituye con tu API Key real de PUBG
@@ -166,8 +150,14 @@
           'Accept': 'application/vnd.api+json',
         }
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('No se encontraron estadísticas para este jugador.');
+        }
+        return response.json();
+      })
       .then(data => {
+        console.log(data);  // Imprime los datos para depuración
         if (data && data.data && data.data[0]) {
           const stats = data.data[0].attributes.stats;
           const statsHtml = `
@@ -190,7 +180,7 @@
         }
       })
       .catch(error => {
-        document.getElementById('playerStats').innerHTML = '<p>Error al obtener las estadísticas.</p>';
+        document.getElementById('playerStats').innerHTML = `<p>Error: ${error.message}</p>`;
       });
     }
 
@@ -202,41 +192,13 @@
         return;
       }
 
-      fetch('recharge.php', {
-        method: 'POST',
-        body: new URLSearchParams({ ucAmount: ucAmount }),
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          document.getElementById('rechargeStatus').innerHTML = `<p>Recarga exitosa. Has recibido ${ucAmount} UC.</p>`;
-        } else {
-          document.getElementById('rechargeStatus').innerHTML = '<p>Error en la recarga.</p>';
-        }
-      })
-      .catch(error => {
-        document.getElementById('rechargeStatus').innerHTML = '<p>Error al procesar la recarga.</p>';
-      });
+      // Aquí simula el proceso de recarga y muestra un mensaje
+      // Si tienes un backend que maneje las recargas, este es el lugar para integrarlo.
+      document.getElementById('rechargeStatus').innerHTML = `<p>Recarga exitosa. Has recibido ${ucAmount} UC.</p>`;
+      
+      // Simulando el pago con PayPal (puedes agregar lógica de pago real más tarde)
+      console.log(`Recarga de ${ucAmount} UC completada.`); // Solo para depuración
     }
-
-    // Configuración de PayPal
-    paypal.Buttons({
-      createOrder: function(data, actions) {
-        return actions.order.create({
-          purchase_units: [{
-            amount: {
-              value: '10.00' // Monto de la recarga
-            }
-          }]
-        });
-      },
-      onApprove: function(data, actions) {
-        return actions.order.capture().then(function(details) {
-          alert('Pago completado por: ' + details.payer.name.given_name);
-          document.getElementById('rechargeStatus').innerHTML = `<p>Recarga exitosa. Has recibido 10 UC.</p>`;
-        });
-      }
-    }).render('#paypal-button-container');
   </script>
 
 </body>
