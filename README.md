@@ -1,5 +1,5 @@
  ReloadZone
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -78,27 +78,41 @@
       box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
     }
 
-    .stats-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-
-    .stat-card {
-      background-color: #34495e;
-      width: 48%;
-      margin-bottom: 20px;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      text-align: center;
-    }
-
     footer {
       margin-top: 30px;
       text-align: center;
       font-size: 0.9em;
     }
+
+    .message {
+      margin-top: 20px;
+      color: #2ecc71;
+      font-size: 1.2em;
+    }
+
+    /* Nueva sección para mostrar las estadísticas */
+    #statsSection {
+      display: none;
+      margin-top: 40px;
+    }
+
+    .stat-card {
+      background-color: #34495e;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card h3 {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+
+    .stat-card p {
+      font-size: 1.4em;
+    }
+
   </style>
 </head>
 <body>
@@ -109,12 +123,11 @@
   </header>
 
   <div class="container">
-    <!-- Sección de estadísticas -->
+    <!-- Sección de consulta de estadísticas -->
     <div class="section">
       <h2>Consulta las estadísticas de un jugador</h2>
       <input type="text" id="playerId" class="input-field" placeholder="Ingresa el ID del jugador">
       <button class="button" onclick="getPlayerStats()">Consultar Estadísticas</button>
-      <div id="playerStats" class="stats-container"></div>
     </div>
 
     <!-- Sección de recarga de UC -->
@@ -125,6 +138,13 @@
         <button class="button" onclick="rechargeUC()">Recargar UC</button>
         <div id="rechargeStatus"></div>
       </div>
+    </div>
+
+    <!-- Sección donde se mostrarán las estadísticas del jugador -->
+    <div id="statsSection">
+      <h2>Estadísticas del Jugador</h2>
+      <div id="playerStats"></div>
+      <button class="button" onclick="goBack()">Volver</button>
     </div>
   </div>
 
@@ -184,7 +204,10 @@
               <p>${stats.damageDealt}</p>
             </div>
           `;
+          // Muestra la sección de estadísticas
           document.getElementById('playerStats').innerHTML = statsHtml;
+          document.getElementById('statsSection').style.display = 'block';
+          window.scrollTo(0, document.body.scrollHeight);
         } else {
           document.getElementById('playerStats').innerHTML = '<p>No se encontraron estadísticas para este jugador.</p>';
         }
@@ -195,7 +218,7 @@
       });
     }
 
-    // Función para recargar UC
+    // Función para simular la recarga de UC
     function rechargeUC() {
       const ucAmount = document.getElementById('ucAmount').value;
       if (!ucAmount || ucAmount <= 0) {
@@ -203,12 +226,4 @@
         return;
       }
 
-      // Aquí simula el proceso de recarga y muestra un mensaje
-      document.getElementById('rechargeStatus').innerHTML = `<p>Recarga exitosa. Has recibido ${ucAmount} UC.</p>`;
-      
-      console.log(`Recarga de ${ucAmount} UC completada.`);
-    }
-  </script>
-
-</body>
-</html>
+      // Simula la recarga y muestra un mensaje
